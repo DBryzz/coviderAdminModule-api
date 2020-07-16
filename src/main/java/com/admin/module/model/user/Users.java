@@ -33,7 +33,7 @@ public class Users implements Serializable{
 	private int userId;
 	
 	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="locationId", nullable=false)
 	//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Location userLocation;
@@ -185,7 +185,7 @@ public class Users implements Serializable{
 	}
 	
 	public Location getUserLocation_1() {
-		return new Location(getLocationId(), getLocationRegion(), getLocationDivision(), getLocationTown());
+		return new Location(getLocationRegion(), getLocationDivision(), getLocationTown());
 	}
 	
 	@JsonIgnore

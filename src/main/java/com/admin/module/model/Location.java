@@ -64,6 +64,13 @@ public class Location implements Serializable{
 		this.division = division;
 		this.town = town;
 	}
+	
+	public Location(String region, String division, String town) {
+		super();
+		this.region = region;
+		this.division = division;
+		this.town = town;
+	}
 
 	public int getLocationId() {
 		return locationId;

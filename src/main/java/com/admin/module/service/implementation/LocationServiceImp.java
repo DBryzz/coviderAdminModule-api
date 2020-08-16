@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.admin.module.dto.PostLocationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ Iterable<Location> locations = locationRepository.findAll();
 	}
 
 	@Override
-	public LocationDTO createLocation(LocationDTO newLocationDTO) {
+	public LocationDTO createLocation(PostLocationDTO newLocationDTO) {
 		// TODO Auto-generated method stub
 		Location location = new Location();
 		location = copyLocationDTOtoLocation(newLocationDTO);
@@ -70,7 +71,7 @@ Iterable<Location> locations = locationRepository.findAll();
 	}
 
 	@Override
-	public void editLocation(int locationId, LocationDTO newLocationDTO) {
+	public void editLocation(int locationId, PostLocationDTO newLocationDTO) {
 		// TODO Auto-generated method stub
 		if(locationRepository.existsById(locationId)) {
 			Location locationToEdit = locationRepository.findById(locationId).get();
@@ -109,7 +110,7 @@ Iterable<Location> locations = locationRepository.findAll();
     }
 	
 
-	public Location copyLocationDTOtoLocation(LocationDTO newLocationDTO) {
+	public Location copyLocationDTOtoLocation(PostLocationDTO newLocationDTO) {
 
 		Location location = new Location();
 		

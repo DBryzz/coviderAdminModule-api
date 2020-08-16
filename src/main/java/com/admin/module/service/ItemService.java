@@ -2,6 +2,7 @@ package com.admin.module.service;
 
 import java.util.List;
 
+import com.admin.module.dto.PostItemDTO;
 import org.springframework.stereotype.Service;
 
 import com.admin.module.dto.ItemDTO;
@@ -17,8 +18,8 @@ public interface ItemService {
 	
 	ItemDTO retrieveItem(int itemId);
 
-	ItemDTO createItem(ItemDTO newItemDTO, int itemLocation);
+	ItemDTO createItem(PostItemDTO newItemDTO, int itemLocation);
 	void deleteItem(int itemId);
-	void editItem(int itemId, int locationId, ItemDTO newItemDTO);
+	void editItem(int itemId, int locationId, PostItemDTO newItemDTO);
 	
 }

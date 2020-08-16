@@ -3,6 +3,7 @@ package com.admin.module.controller;
 
 import java.util.List;
 
+import com.admin.module.dto.PostLocationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,7 +40,7 @@ public class LocationController {
 	}
 
 	@PostMapping("/location")
-	public ResponseEntity<LocationDTO> addlocation(@RequestBody LocationDTO newLocationDTO) {
+	public ResponseEntity<LocationDTO> addlocation(@RequestBody PostLocationDTO newLocationDTO) {
 		LocationDTO locationDTO = locationService.createLocation(newLocationDTO);
 
 		return new ResponseEntity<>(locationDTO, HttpStatus.CREATED);
@@ -59,7 +60,7 @@ public class LocationController {
 
 	@PutMapping("/location/{locationId})")
 	public ResponseEntity<Object> editLocation(@PathVariable("locationId") int locationId,
-			@RequestBody LocationDTO newlocationDTO) {
+			@RequestBody PostLocationDTO newlocationDTO) {
 		locationService.editLocation(locationId, newlocationDTO);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

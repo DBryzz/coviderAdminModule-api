@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.admin.module.model.Item;
 import com.admin.module.model.user.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,6 +23,7 @@ public class LocationDTO {
 		private String division;
 		private String town;
 		private List<Users> users;
+		private List<Item> item;
 		
 		public LocationDTO() {
 			
@@ -76,12 +78,19 @@ public class LocationDTO {
 			this.town = town;
 		}
 
-		
+
 	 public List<Users> takeUsers() { return users; }
-	
-	  
+
+
 	  public void putUsers(List<Users> users) { this.users = users; }
-	 
-		
-		
+
+
+
+	public List<Item> takeItem() {
+		return item;
+	}
+
+	public void putItem(List<Item> item) {
+		this.item = item;
+	}
 }

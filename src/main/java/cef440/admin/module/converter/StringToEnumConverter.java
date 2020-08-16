@@ -2,13 +2,13 @@ package cef440.admin.module.converter;
 
 import org.springframework.core.convert.converter.Converter;
 
-import com.admin.module.model.user.UserType;
+import com.admin.module.model.user.UserRole;
 
-public class StringToEnumConverter implements Converter<String, UserType> {
+public class StringToEnumConverter implements Converter<String, UserRole> {
     @Override
-    public UserType convert(String source) {
+    public UserRole convert(String source) {
         try {
-            return UserType.valueOf(source.toUpperCase());
+            return UserRole.valueOf(source.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }

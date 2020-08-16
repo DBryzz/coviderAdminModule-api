@@ -3,9 +3,8 @@ package com.admin.module.service;
 import java.util.List;
 
 
+import com.admin.module.dto.PostUserDTO;
 import com.admin.module.dto.UserDTO;
-import com.admin.module.model.user.UserType;
-import com.admin.module.model.user.Users;
 
 public interface UserService {
 
@@ -20,9 +19,11 @@ public interface UserService {
 	 */
 	UserDTO retrieveUser(int userId);
 
-	UserDTO createUser(UserDTO newUserDTO, int userLocation);
+	UserDTO createUser(PostUserDTO newUserDTO, int userLocation);
+	UserDTO createNMUser(PostUserDTO newUserDTO, int userLocation);
+
 	void deleteUser(int userId);
-	void editUser(int userId, int locationId, UserDTO newUserDTO);
+	void editUser(int userId, int locationId, PostUserDTO newUserDTO);
 	
 
 	

@@ -2,22 +2,9 @@ package com.admin.module.dto;
 
 import java.util.Date;
 
-import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.admin.module.model.Location;
 
-import com.admin.module.model.user.UserType;
-
-//import com.admin.module.model.user.UserType;
+//import com.admin.module.model.user.UserRole;
 
 import lombok.Data;
 
@@ -28,9 +15,8 @@ public class UserDTO {
 	private String userFullName;
 	private String userName;
 	private String userEmail;
-	private Date userDOB;
 	private String userPassword;
-	private String userType;
+	private String userRole;
 	private Location userLocation;
 
 	private transient String userDateOfBirthString;
@@ -40,16 +26,15 @@ public class UserDTO {
 	}
 
 	public UserDTO(int userId, String userFullName, String userName, String userEmail, Date userDOB,
-			String userPassword, String userType, Location userLocation, String userDateOfBirthString) {
+			String userPassword, String userRole, Location userLocation, String userDateOfBirthString) {
 
 		super();
 		this.userId = userId;
 		this.userFullName = userFullName;
 		this.userName = userName;
 		this.userEmail = userEmail;
-		this.userDOB = userDOB;
 		this.userPassword = userPassword;
-		this.userType = userType;
+		this.userRole = userRole;
 		this.userLocation = userLocation;
 
 		this.userDateOfBirthString = userDateOfBirthString;
@@ -58,8 +43,8 @@ public class UserDTO {
 	@Override
 	public String toString() {
 		return "UserDTO [userId=" + userId + ", userFullName=" + userFullName + ", userName=" + userName
-				+ ", userEmail=" + userEmail + ", userDOB=" + userDOB + ", userPassword=" + userPassword + ", userType="
-				+ userType + "]";
+				+ ", userEmail=" + userEmail + ", userPassword=" + userPassword + ", userRole="
+				+ userRole + "]";
 	}
 
 	public int getUserId() {
@@ -106,14 +91,6 @@ public class UserDTO {
 		this.userEmail = userEmail;
 	}
 
-	public Date getUserDOB() {
-		return userDOB;
-	}
-
-	public void setUserDOB(Date userDOB) {
-		this.userDOB = userDOB;
-	}
-
 	public String getUserPassword() {
 		return userPassword;
 	}
@@ -122,16 +99,16 @@ public class UserDTO {
 		this.userPassword = userPassword;
 	}
 
-	public String getUserType() {
-		return userType;
+	public String getUserRole() {
+		return userRole;
 	}
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
 	}
-	
+
 	public String getUserDateOfBirthString() {
-		return userDOB.toString();
+		return userDateOfBirthString;
 	}
 
 	public void setUserDateOfBirthString(String userDateOfBirthString) {

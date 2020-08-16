@@ -2,6 +2,7 @@ package com.admin.module.controller;
 
 import java.util.List;
 
+import com.admin.module.dto.PostItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,8 @@ public class ItemController {
 	
 
 	@PostMapping("/item/location/{locationId}")
-	public ResponseEntity<ItemDTO> addItem(@RequestBody ItemDTO newItemDTO, @PathVariable("locationId") int locationId) {
+	public ResponseEntity<ItemDTO> addItem(@RequestBody PostItemDTO newItemDTO,
+										   @PathVariable("locationId") int locationId) {
 		ItemDTO itemDTO = itemService.createItem(newItemDTO, locationId);
 
 		return new ResponseEntity<> (itemDTO,HttpStatus.CREATED);
@@ -60,7 +62,10 @@ public class ItemController {
 	}
 	
 	@PutMapping("/item/{itemId}/location/{locationId})")
-	public ResponseEntity<Object> editItem(@PathVariable("itemId") int itemId, @PathVariable("locationId") int locationId, @RequestBody ItemDTO newItemDTO) {
+	public ResponseEntity<Object> editItem(@PathVariable("itemId") int itemId,
+										   @PathVariable("locationId") int locationId,
+										   @RequestBody PostItemDTO newItemDTO) {
+
 		itemService.editItem(itemId, locationId, newItemDTO);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

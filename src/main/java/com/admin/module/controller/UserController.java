@@ -2,6 +2,7 @@ package com.admin.module.controller;
 
 import java.util.List;
 
+import com.admin.module.dto.PostUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.admin.module.dto.UserDTO;
-import com.admin.module.model.user.UserType;
 import com.admin.module.service.UserService;
 
 
@@ -42,11 +42,19 @@ public class UserController {
 	
 
 	@PostMapping("/user/location/{locationId}")
-	public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO newUserDTO, @PathVariable("locationId") int locationId) {
+	public ResponseEntity<UserDTO> addUser(@RequestBody PostUserDTO newUserDTO, @PathVariable("locationId") int locationId) {
 		UserDTO userDTO = userService.createUser(newUserDTO, locationId);
 
 		return new ResponseEntity<> (userDTO,HttpStatus.CREATED);
 		
+	}
+
+	@PostMapping("/user/normal/location/{locationId}")
+	public ResponseEntity<UserDTO> addNMUser(@RequestBody PostUserDTO newUserDTO, @PathVariable("locationId") int locationId) {
+		UserDTO userDTO = userService.createNMUser(newUserDTO, locationId);
+
+		return new ResponseEntity<> (userDTO,HttpStatus.CREATED);
+
 	}
 
 	
@@ -77,7 +85,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/user/{userId}/location/{locationId})")
-	public ResponseEntity<Object> editUser(@PathVariable("userId") int userId, @PathVariable("locationId") int locationId, @RequestBody UserDTO newUserDTO) {
+	public ResponseEntity<Object> editUser(@PathVariable("userId") int userId, @PathVariable("locationId") int locationId, @RequestBody PostUserDTO newUserDTO) {
 		userService.editUser(userId, locationId, newUserDTO);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

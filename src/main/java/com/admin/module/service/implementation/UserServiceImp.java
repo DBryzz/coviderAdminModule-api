@@ -1,19 +1,18 @@
 package com.admin.module.service.implementation;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.admin.module.dto.PostUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.admin.module.dto.UserDTO;
-import com.admin.module.model.Item;
 import com.admin.module.model.Location;
-import com.admin.module.model.user.UserType;
+import com.admin.module.model.user.UserRole;
 import com.admin.module.model.user.Users;
 import com.admin.module.repository.LocationRepository;
 import com.admin.module.repository.UsersRepository;
@@ -26,15 +25,19 @@ import cef440.admin.module.converter.StringToEnumConverter;
 
 @Service
 public class UserServiceImp implements UserService {
+
+	private final PasswordEncoder passwordEncoder;
 	private UsersRepository usersRepository;
 
 	private LocationRepository locationRepository;
 
+
 	
 
 	@Autowired
-	public UserServiceImp(UsersRepository usersRepository, LocationRepository locationRepository) {
+	public UserServiceImp(PasswordEncoder passwordEncoder, UsersRepository usersRepository, LocationRepository locationRepository) {
 		super();
+		this.passwordEncoder = passwordEncoder;
 		this.usersRepository = usersRepository;
 		this.locationRepository = locationRepository;
 		
@@ -53,12 +56,12 @@ public class UserServiceImp implements UserService {
 	
 	
 	@Override
-	public List<UserDTO> retrieveNMUsers() { //String userType
+	public List<UserDTO> retrieveNMUsers() { //String userRole
 		// TODO Auto-generated method stub
 		List<UserDTO> userDTOS = retrieveUsers();
 		List<UserDTO> nmUserDTOS = new ArrayList<>();
 		for(UserDTO userDTO: userDTOS) {
-			if(userDTO.getUserType() == UserType.NORMAL.toString()) {
+			if(userDTO.getUserRole() == UserRole.NORMAL.toString()) {
 				nmUserDTOS.add(userDTO);
 			}
 		}
@@ -72,7 +75,7 @@ public class UserServiceImp implements UserService {
 		List<UserDTO> userDTOS = retrieveUsers();
 		List<UserDTO> agentUserDTOS = new ArrayList<>();
 		for(UserDTO userDTO: userDTOS) {
-			if(userDTO.getUserType() == UserType.AGENT.toString()) {
+			if(userDTO.getUserRole() == UserRole.AGENT.toString()) {
 				agentUserDTOS.add(userDTO);
 			}
 		}
@@ -85,7 +88,7 @@ public class UserServiceImp implements UserService {
 		List<UserDTO> userDTOS = retrieveUsers();
 		List<UserDTO> adminUserDTOS = new ArrayList<>();
 		for(UserDTO userDTO: userDTOS) {
-			if(userDTO.getUserType() == UserType.ADMIN.toString()) {
+			if(userDTO.getUserRole() == UserRole.ADMIN.toString()) {
 				adminUserDTOS.add(userDTO);
 			}
 		}
@@ -119,9 +122,9 @@ public class UserServiceImp implements UserService {
 		return userDTOS;
 	}
 
-	@Override
 
-	public UserDTO createUser(UserDTO newUserDTO, int userLocation) {
+	@Override
+	public UserDTO createUser(PostUserDTO newUserDTO, int userLocation) {
 		// TODO Auto-generated method stub
 		Users user = new Users();
 		Optional<Location> location = locationRepository.findById(userLocation);
@@ -136,7 +139,21 @@ public class UserServiceImp implements UserService {
 		}
 	}
 
-	
+	@Override
+	public UserDTO createNMUser(PostUserDTO newUserDTO, int userLocation) {
+		Users user = new Users();
+		Optional<Location> location = locationRepository.findById(userLocation);
+		if(location.isPresent()) {
+			user = copyUserDTOtoUser(newUserDTO, location);
+			user.setUserRole(new StringToEnumConverter().convert("NORMAL"));
+
+			user = usersRepository.save(user);
+
+			return copyUsertoUserDTO(user);
+		} else {
+			throw new ResourceNotFoundException("Could not find Location with Id "+userLocation);
+		}
+	}
 
 
 	@Override
@@ -148,7 +165,7 @@ public class UserServiceImp implements UserService {
 
 
 	@Override
-	public void editUser(int userId, int locationId, UserDTO newUserDTO) {
+	public void editUser(int userId, int locationId, PostUserDTO newUserDTO) {
 		// TODO Auto-generated method stub
 		
 		if(usersRepository.existsById(userId)) {
@@ -183,9 +200,8 @@ public class UserServiceImp implements UserService {
         userDTO.setUserFullName(user.getUserFullName());
         userDTO.setUserName(user.getUserName());
         userDTO.setUserEmail(user.getUserEmail());
-        userDTO.setUserDOB(user.getUserDOB());
         userDTO.setUserPassword(user.getUserPassword());
-        userDTO.setUserType(user.getUserType().toString());
+        userDTO.setUserRole(user.getUserRole().toString());
 
         userDTO.setUserLocation(user.getUserLocation());
 
@@ -193,29 +209,32 @@ public class UserServiceImp implements UserService {
         
         return userDTO;
     }
-	
 
-	public Users copyUserDTOtoUser(UserDTO newUserDTO, Optional<Location> userLocation) {
+
+
+
+	public Users copyUserDTOtoUser(PostUserDTO newUserDTO, Optional<Location> userLocation) {
 
 		
-		String userType = newUserDTO.getUserType();
-		String type;
+		String userRole = newUserDTO.getUserRole();
+		String role;
 		
-		switch(userType.toLowerCase()) {
+		switch(userRole.toLowerCase()) {
 		case "admin":
-			type = userType.toLowerCase();
+			role = userRole.toLowerCase();
 			break;
 		case "agent":
-			type = userType.toLowerCase();
+			role = userRole.toLowerCase();
 			break;
 		default:
-			type = "normal";
+			role = "normal";
 		}
 
 		
 		Users user = new Users();
+
 		
-		if(!type.equalsIgnoreCase("normal")) {
+		if(!role.equalsIgnoreCase("normal")) {
 			user.putUserLocation(new Location(99999999, "Government", "Government", "Government"));
 		} else {
 			Location newLocation = userLocation.get();
@@ -232,12 +251,13 @@ public class UserServiceImp implements UserService {
 		user.setUserFullName(newUserDTO.getUserFullName());
 		user.setUserName(newUserDTO.getUserName());
 		user.setUserEmail(newUserDTO.getUserEmail());
+		user.setUserPassword(passwordEncoder.encode(newUserDTO.getUserPassword()));
+		user.setUserRole(new StringToEnumConverter().convert(role));
 		user.setUserDOB(newUserDTO.getUserDOB());
-		user.setUserPassword(newUserDTO.getUserPassword());
-		user.setUserType(new StringToEnumConverter().convert(type));
-		user.setUserDateOfBirthString(newUserDTO.getUserDateOfBirthString());       
+		user.setUserDateOfBirthString(newUserDTO.getUserDOB().toString());
         return user;
     }
+
 
 
 }

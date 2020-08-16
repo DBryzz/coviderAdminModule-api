@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.admin.module.dto.PostItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -75,8 +76,7 @@ public class ItemServiceImp implements ItemService{
 	}
 
 	@Override
-
-	public ItemDTO createItem(ItemDTO newItemDTO, int itemLocation) {
+	public ItemDTO createItem(PostItemDTO newItemDTO, int itemLocation) {
 		// TODO Auto-generated method stub
 		Item item = new Item();
 		Optional<Location> location = locationRepository.findById(itemLocation);
@@ -103,7 +103,7 @@ public class ItemServiceImp implements ItemService{
 
 
 	@Override
-	public void editItem(int itemId, int locationId, ItemDTO newItemDTO) {
+	public void editItem(int itemId, int locationId, PostItemDTO newItemDTO) {
 		// TODO Auto-generated method stub
 		
 		if(itemRepository.existsById(itemId)) {
@@ -147,7 +147,7 @@ public class ItemServiceImp implements ItemService{
     }
 	
 
-	public Item copyItemDTOtoItem(ItemDTO newItemDTO, Optional<Location> location) {
+	public Item copyItemDTOtoItem(PostItemDTO newItemDTO, Optional<Location> location) {
 
 
 		Item item = new Item();
